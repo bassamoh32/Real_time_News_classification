@@ -46,7 +46,27 @@ services:
       KAFKA_BROKER_CONNECT: kafka:9092
     networks:
       - news_net
+  spark-master:
+    image: bitnami/spark:latest
+    hostname: spark-master
+    container_name: spark-master
+    command: ["spark-class", "org.apache.spark.deploy.master.Master"]
+    ports:
+      - "7070:7070"
+      - "8081:8080"
+    networks:
+      - news_net
+  
 
+  spark-worker:
+    image: bitnami/spark:latest
+    hostname: spark-worker
+    container_name: spark-worker
+    command: ["spark-class", "org.apache.spark.deploy.worker.Worker", "spark://spark-master:7077"]
+    depends_on:
+      - spark-master
+    networks:
+      - news_net
   kafka-producer:
     build:
         context: .
@@ -54,9 +74,20 @@ services:
     hostname: kafka-producer
     container_name: kafka-producer
     depends_on:
-        - kafka
+      - kafka
     networks:
       - news_net
-    
+  spark_streaming:
+    build:
+        context: .
+        dockerfile: ./spark/Dockerfile
+    hostname: spark_streaming
+    container_name: spark_streaming
+    depends_on:
+      - spark-master
+      - kafka
+      - cassandra
+    networks:
+      - news_net
 networks:
     news_net:
