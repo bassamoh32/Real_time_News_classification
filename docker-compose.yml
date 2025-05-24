@@ -87,6 +87,8 @@ services:
       - spark-master
       - kafka
       - cassandra
+    volumes: 
+      - ./cassandra:/app/cassandra
     networks:
       - news_net
 networks:
