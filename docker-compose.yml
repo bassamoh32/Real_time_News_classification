@@ -91,5 +91,28 @@ services:
       - ./cassandra:/app/cassandra
     networks:
       - news_net
+  cassandra:
+    image: cassandra:latest
+    hostname: cassandra
+    container_name: cassandra
+    ports:
+      - "9042:9042"
+    environment:
+      - CASSANDRA_USER=admin
+      - CASSANDRA_PASSWORD=admin
+      - CASSANDRA_RPC_ADDRESS=0.0.0.0
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+      - ./configuration:/app/configuration
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh -e 'DESCRIBE KEYSPACES'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - news_net
 networks:
     news_net:
+
+volumes:
+    cassandra-data:

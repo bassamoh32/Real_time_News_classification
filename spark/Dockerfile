@@ -3,7 +3,7 @@ FROM bitnami/spark:latest
 WORKDIR /app
 
 COPY ./cassandra /app/cassandra
-COPY ./spark/consumer.py .
+COPY ./spark/ .
 
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
