@@ -1,0 +1,6 @@
+BROKER : "kafka:9092"
+KAFKA_TOPIC : "news"
+API_VERSION: 
+  - 2
+  - 7
+  - 0
